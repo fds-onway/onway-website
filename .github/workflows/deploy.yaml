@@ -1,0 +1,19 @@
+name: Website Deploy
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'docker-compose.yaml'
+  workflow_dispatch:
+
+jobs:
+  imported-workflow:
+    name: Deploy
+    uses: fds-onway/onway-infra/.github/workflows/bucket_website_deploy.yaml@main
+    with:
+        bucket_name: 'www.crassus.app.br'
+    secrets: inherit
