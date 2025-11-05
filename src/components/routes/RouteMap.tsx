@@ -1,10 +1,10 @@
 import {
-  MapContainer,
   TileLayer,
   Marker,
   Polyline,
   useMapEvents,
   Popup,
+  MapContainer,
 } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -84,9 +84,11 @@ export function RouteMap({ points, onAddPoint }: RouteMapProps) {
   return (
     <div className="my-4 h-full min-h-[300px] flex-1">
       <MapContainer
-        center={[-25.7346, -53.057]}
-        zoom={8}
         style={{ height: '100%', width: '100%', zIndex: 10 }}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        center={[-25.7346, -53.0585]}
+        zoom={13}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapClickHandler onAddPoint={onAddPoint} />
@@ -101,7 +103,10 @@ export function RouteMap({ points, onAddPoint }: RouteMapProps) {
           </Marker>
         ))}
         {routePositions.length > 1 && (
-          <Polyline positions={routePositions} color="blue" />
+          <Polyline
+            positions={routePositions}
+            pathOptions={{ color: 'blue' }}
+          />
         )}
       </MapContainer>
     </div>
