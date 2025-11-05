@@ -1,0 +1,809 @@
+
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getApiDetails",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Informações gerais da API, como: Se está de pé, quanto tempo está de pé, consumo de memória e CPU, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Pegar dados de uso da API",
+        "tags": [
+          "Miscelânia"
+        ]
+      }
+    },
+    "/user/register": {
+      "post": {
+        "operationId": "UserController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário foi criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedUserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Algum dado enviado é inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Já existe um usuário com o e-mail especificado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Criar um novo usuário",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Redirecionamento para a página de login do Google."
+          }
+        },
+        "summary": "Iniciar o fluxo de login com Google (Redirecionamento)",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "description": "Esta rota é chamada pelo Google após o usuário conceder a permissão. Ela não deve ser chamada diretamente pelo cliente. O Google enviará um código que será trocado por um perfil de usuário, e a API retornará o JWT da aplicação.",
+        "operationId": "AuthController_googleAuthRedirect",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Autenticação bem-sucedida. Retorna o token de acesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessfulLoginDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "O e-mail retornado pelo Google já está cadastrado com um provedor local (e-mail/senha).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictErrorDTO"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha na comunicação com o servidor do Google."
+          }
+        },
+        "summary": "Rota de callback para o fluxo do Google OAuth2",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/user": {
+      "post": {
+        "operationId": "AuthController_userAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário realizou login com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessfulLoginDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Algum dado enviado é inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "A tentativa de login falhou por conta de algum dado incorreto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailedLoginDTO"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Realizar login convencional (com usuário e senha)",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/google/token": {
+      "post": {
+        "description": "Esta rota é para ser usada por aplicativos mobile (Android/iOS). O cliente mobile deve obter um `idToken` do SDK do Google Sign-In e enviá-lo no corpo desta requisição. A API irá verificar o token, encontrar ou criar o usuário, e retornar o JWT da aplicação.",
+        "operationId": "AuthController_googleTokenSignIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autenticação bem-sucedida. Retorna o token de acesso da sua aplicação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessfulLoginDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "O `idToken` enviado no corpo da requisição é nulo ou mal formatado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "O `idToken` do Google é inválido, expirou ou não pôde ser verificado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailedLoginDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "O e-mail associado a este token do Google já está em uso por uma conta local (e-mail/senha).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Autenticar usuário via Google (Mobile)",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/verify-email": {
+      "get": {
+        "description": "Este endpoint é chamado pelo link enviado ao e-mail do usuário. Ele não deve ser chamado diretamente.",
+        "operationId": "AuthController_verifyEmail",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "E-mail verificado com sucesso. Retorna um token de acesso para login automático.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessfulLoginDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "O token fornecido é inválido ou já foi usado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Verificar o e-mail de um novo usuário",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/route": {
+      "post": {
+        "operationId": "RouteController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRouteDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Criar uma nova rota inteira.",
+        "tags": [
+          "Rotas"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "OnWay API",
+    "description": "Documentação da API do projeto de Fábrica de Software 'OnWay', contendo todas as rotas utilizadas no mesmo",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "MemoryDto": {
+        "type": "object",
+        "properties": {
+          "rss": {
+            "type": "number",
+            "example": 38.83,
+            "description": "Resident Set Size (RSS) em MB"
+          },
+          "heapTotal": {
+            "type": "number",
+            "example": 7.16,
+            "description": "Total de memória alocada para o heap em MB"
+          },
+          "heapUsed": {
+            "type": "number",
+            "example": 4.28,
+            "description": "Memória do heap em uso em MB"
+          },
+          "external": {
+            "type": "number",
+            "example": 3.1,
+            "description": "Memória usada por objetos C++ e JS externos em MB"
+          },
+          "arrayBuffers": {
+            "type": "number",
+            "example": 0.01,
+            "description": "Memória alocada para ArrayBuffers em MB"
+          }
+        },
+        "required": [
+          "rss",
+          "heapTotal",
+          "heapUsed",
+          "external",
+          "arrayBuffers"
+        ]
+      },
+      "CpuDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "number",
+            "example": 87.56,
+            "description": "Tempo de CPU gasto em código do usuário em milissegundos"
+          },
+          "system": {
+            "type": "number",
+            "example": 12.34,
+            "description": "Tempo de CPU gasto em código do sistema em milissegundos"
+          }
+        },
+        "required": [
+          "user",
+          "system"
+        ]
+      },
+      "UptimeDto": {
+        "type": "object",
+        "properties": {
+          "hours": {
+            "type": "number",
+            "example": 1,
+            "description": "Horas que a API está no ar"
+          },
+          "minutes": {
+            "type": "number",
+            "example": 30,
+            "description": "Minutos que a API está no ar"
+          },
+          "seconds": {
+            "type": "number",
+            "example": 5,
+            "description": "Segundos que a API está no ar"
+          }
+        },
+        "required": [
+          "hours",
+          "minutes",
+          "seconds"
+        ]
+      },
+      "ApiDetailsDto": {
+        "type": "object",
+        "properties": {
+          "live": {
+            "type": "string",
+            "example": "OK",
+            "description": "Status da API"
+          },
+          "memoryMB": {
+            "$ref": "#/components/schemas/MemoryDto"
+          },
+          "cpuMs": {
+            "$ref": "#/components/schemas/CpuDto"
+          },
+          "env": {
+            "type": "string",
+            "example": "development",
+            "description": "Ambiente em que a API está rodando"
+          },
+          "upTime": {
+            "$ref": "#/components/schemas/UptimeDto"
+          }
+        },
+        "required": [
+          "live",
+          "memoryMB",
+          "cpuMs",
+          "env",
+          "upTime"
+        ]
+      },
+      "RegisterUserDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "O nome completo do usuário, tendo no mínimo duas palavras"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@example.com",
+            "description": "O e-mail que será utilizado no cadastro"
+          },
+          "password": {
+            "type": "string",
+            "example": "SenhaLegal123!",
+            "description": "A senha do usuário, devendo ter no mínimo 8 caracteres, 1 número e 1 caracter especial",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "CreatedUserDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "O ID único do usuário gerado pelo banco de dados.",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "O nome completo do usuário.",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "O e-mail único do usuário.",
+            "example": "test@example.com"
+          },
+          "role": {
+            "type": "string",
+            "description": "O nível de permissão do usuário no sistema.",
+            "example": "user",
+            "enum": [
+              "admin",
+              "user"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "A data e hora em que o registro do usuário foi criado.",
+            "example": "2023-10-27T10:00:00.000Z",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "role",
+          "createdAt"
+        ]
+      },
+      "ValidationErrorDTO": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "O código de status HTTP da resposta.",
+            "example": 400
+          },
+          "message": {
+            "description": "Uma lista de mensagens de erro de validação.",
+            "example": [
+              "email must be an email",
+              "password should not be empty",
+              "name must be a string"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "error": {
+            "type": "string",
+            "description": "O nome do erro HTTP.",
+            "example": "Bad Request"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
+      },
+      "ConflictErrorDTO": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Uma mensagem clara e legível sobre o erro. Para erros de validação, pode ser um array de strings.",
+            "example": "User with this e-mail already exists."
+          },
+          "error": {
+            "type": "string",
+            "description": "O nome do erro HTTP correspondente ao status code.",
+            "example": "Conflict"
+          },
+          "statusCode": {
+            "type": "number",
+            "description": "O código de status HTTP da resposta.",
+            "example": 409
+          }
+        },
+        "required": [
+          "message",
+          "error",
+          "statusCode"
+        ]
+      },
+      "SuccessfulLoginDTO": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "dmVudG8gYXp1bCB0ZWNsYWRvIG1hw6fDoyBnaXJhc3NvbCBjYW1pbmhvIHBvbnRlIHJlbMOzZ2lvIHNvbWJyYSBlc3RyZWxhIGNvcG8gbGl2cm8gamFuZWxhIHBlZHJhIGFiYWNhdGUgc29uaG8gY2FkZWl",
+            "description": "O token JWT de login, possui duração de 1 mês"
+          },
+          "expirationDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2025-11-03T22:00:00:000Z",
+            "description": "A data e hora que o token irá expirar em formato ISO-8601"
+          }
+        },
+        "required": [
+          "accessToken",
+          "expirationDate"
+        ]
+      },
+      "LoginDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "test@example.com",
+            "description": "O e-mail que será utilizado para a tentativa de login"
+          },
+          "password": {
+            "type": "string",
+            "example": "SenhaLegal123!",
+            "description": "A senha que será utilizada para a tentativa de login"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "FailedLoginDTO": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "O código de status HTTP da resposta.",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "description": "A mensagem de erro de login.",
+            "example": "Usuário ou senha incorretos"
+          },
+          "error": {
+            "type": "string",
+            "description": "O nome do erro HTTP.",
+            "example": "Unauthorized"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
+      },
+      "GoogleTokenDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "O ID Token JWT fornecido pelo SDK do Google Sign-In no cliente mobile"
+          }
+        },
+        "required": [
+          "idToken"
+        ]
+      },
+      "ImageRouteDTO": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "example": "711539a9-62a1-4d9f-bfce-ee71b50bb7d3.png",
+            "description": "O nome do arquivo gerado antes de fazer o upload. Deve ser sempre um UUID junto de sua extensão (ex: .png, .jpeg, etc)"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://undefined.s3.us-east-1.amazonaws.com/711539a9-62a1-4d9f-bfce-ee71b50bb7d3.png",
+            "description": "A URL da imagem gerada APÓS o upload da imagem. Ela terá o formato de: \"https://undefined.s3.us-east-1.amazonaws.com/<(nome_arquivo)>. Para fazer o upload da imagem, primeiro pegue a URL temporária na rota \"/cdn/presignedUrl?folder=<pasta(neste caso é 'routes')>&fileName=<(nome_arquivo)>&fileType=<(tipo_arquivo)>"
+          }
+        },
+        "required": [
+          "fileName",
+          "imageUrl"
+        ]
+      },
+      "ImagePointDTO": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "example": "711539a9-62a1-4d9f-bfce-ee71b50bb7d3.png",
+            "description": "O nome do arquivo gerado antes de fazer o upload. Deve ser sempre um UUID junto de sua extensão (ex: .png, .jpeg, etc)"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://undefined.s3.us-east-1.amazonaws.com/711539a9-62a1-4d9f-bfce-ee71b50bb7d3.png",
+            "description": "A URL da imagem gerada APÓS o upload da imagem. Ela terá o formato de: \"https://undefined.s3.us-east-1.amazonaws.com/<nome_arquivo>. Para fazer o upload da imagem, primeiro pegue a URL temporária na rota \"/cdn/presignedUrl?folder=<pasta(neste caso é 'points')>&fileName=<(nome_arquivo)>&fileType=<(tipo_arquivo)>"
+          }
+        },
+        "required": [
+          "fileName",
+          "imageUrl"
+        ]
+      },
+      "PointDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Rio São João",
+            "description": "O nome que o ponto terá"
+          },
+          "type": {
+            "type": "string",
+            "description": "O que o ponto é?",
+            "example": "natureza",
+            "enum": [
+              "restaurante",
+              "parque",
+              "natureza",
+              "servico",
+              "hotel",
+              "entretenimento",
+              "miscelania"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "example": "Local encantador com cachoeiras e paisagens naturais ao longo do rio, ideal para caminhada e contemplação da natureza.",
+            "description": "A Descrição do ponto"
+          },
+          "latitude": {
+            "type": "string",
+            "example": "-20.912323",
+            "description": "Latitude do ponto. Formato: xx.xxxxxx"
+          },
+          "longitude": {
+            "type": "string",
+            "example": "-44.502341",
+            "description": "Longitude do ponto. Formato: xx.xxxxxx"
+          },
+          "images": {
+            "description": "Lista de todas as imagens que compõem o ponto.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImagePointDTO"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "description",
+          "latitude",
+          "longitude",
+          "images"
+        ]
+      },
+      "CreateRouteDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Caminhos de São João",
+            "description": "O nome que a rota terá"
+          },
+          "description": {
+            "type": "string",
+            "example": "Os Caminhos de São João são rotas turísticas e de peregrinação que ligam cidades históricas do interior de Minas Gerais, celebrando a fé, a cultura e as tradições locais.",
+            "description": "A Descrição principal da rota"
+          },
+          "tags": {
+            "example": [
+              "Fé",
+              "Tradição",
+              "Cultura",
+              "Natureza",
+              "Comunidade"
+            ],
+            "description": "Tags que irão ajustar no SEO da rota",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "description": "Lista de todas as imagens que compõem a rota.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageRouteDTO"
+            }
+          },
+          "points": {
+            "description": "Lista de todos os pontos que compõem a rota.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PointDTO"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "tags",
+          "images",
+          "points"
+        ]
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Usuários e Gestão de Acesso",
+      "tags": [
+        "Autenticação",
+        "Usuários"
+      ]
+    },
+    {
+      "name": "Rotas, Pontos e Sugestão de Pontos",
+      "tags": [
+        "Rotas"
+      ]
+    },
+    {
+      "name": "Utilitários",
+      "tags": [
+        "Utils",
+        "Miscelânia"
+      ]
+    }
+  ]
+}
