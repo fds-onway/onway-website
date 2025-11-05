@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://api.crassus.app.br';
 
 // Instância do axios com configurações padrão
 export const api = axios.create({
