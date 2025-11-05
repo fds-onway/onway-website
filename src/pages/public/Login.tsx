@@ -20,12 +20,18 @@ const Login: React.FC = () => {
     e.preventDefault();
     const form = e.currentTarget;
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
-    const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement)
+      ?.value;
     try {
       await login(email, password);
       // O redirecionamento será feito pelo useEffect quando isAuthenticated mudar
     } catch (err: unknown) {
-      if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as any).message === 'string') {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'message' in err &&
+        typeof (err as any).message === 'string'
+      ) {
         setError((err as { message: string }).message);
       } else {
         setError('Erro ao autenticar');
@@ -46,7 +52,11 @@ const Login: React.FC = () => {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm onSubmit={(e) => { void handleSubmit(e); }} />
+            <LoginForm
+              onSubmit={(e) => {
+                void handleSubmit(e);
+              }}
+            />
             {error && <div className="mt-4 text-sm text-red-600">{error}</div>}
           </div>
         </div>

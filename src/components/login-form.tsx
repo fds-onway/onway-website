@@ -36,7 +36,12 @@ export function LoginForm({
       await login(email, password);
       // O redirecionamento será feito pelo middleware após autenticação
     } catch (err: unknown) {
-      if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as any).message === 'string') {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'message' in err &&
+        typeof (err as any).message === 'string'
+      ) {
         setError((err as { message: string }).message);
       } else {
         setError('E-mail ou senha inválidos.');
@@ -50,7 +55,9 @@ export function LoginForm({
     <form
       className={cn('flex flex-col gap-6', className)}
       {...props}
-      onSubmit={(e) => { void handleSubmit(e); }}
+      onSubmit={(e) => {
+        void handleSubmit(e);
+      }}
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">

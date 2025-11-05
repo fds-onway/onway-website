@@ -26,8 +26,14 @@ api.interceptors.response.use(
   (error) => {
     // Aqui pode-se tratar erros globais, como expiração de token, etc.
     if (error && error.response && error.response.data) {
-      return Promise.reject(new Error(error.response.data.message || 'Erro na requisição'));
+      return Promise.reject(
+        new Error(error.response.data.message || 'Erro na requisição'),
+      );
     }
-    return Promise.reject(error instanceof Error ? error : new Error('Erro desconhecido na requisição'));
+    return Promise.reject(
+      error instanceof Error
+        ? error
+        : new Error('Erro desconhecido na requisição'),
+    );
   },
 );

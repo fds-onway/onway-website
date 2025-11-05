@@ -41,7 +41,12 @@ export default function Register() {
       setEmail('');
       setPassword('');
     } catch (err: unknown) {
-      if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as any).message === 'string') {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'message' in err &&
+        typeof (err as any).message === 'string'
+      ) {
         setError((err as { message: string }).message);
       } else {
         setError('Erro ao cadastrar usuário.');
@@ -64,7 +69,11 @@ export default function Register() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <form onSubmit={(e) => { void handleSubmit(e); }}>
+            <form
+              onSubmit={(e) => {
+                void handleSubmit(e);
+              }}
+            >
               <FieldGroup>
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h1 className="text-2xl font-bold">Cadastro</h1>

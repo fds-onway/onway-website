@@ -37,7 +37,7 @@ export function LoginForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-  const data: AuthResponse = await res.json();
+      const data: AuthResponse = await res.json();
       if (res.ok) {
         if (data.accessToken) {
           localStorage.setItem('token', data.accessToken);
@@ -47,7 +47,12 @@ export function LoginForm({
         setError(data.message || 'E-mail ou senha inválidos.');
       }
     } catch (err: unknown) {
-      if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as any).message === 'string') {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'message' in err &&
+        typeof (err as any).message === 'string'
+      ) {
         setError((err as { message: string }).message);
       } else {
         setError('Erro de conexão.');
@@ -61,7 +66,9 @@ export function LoginForm({
     <form
       className={cn('flex flex-col gap-6', className)}
       {...props}
-      onSubmit={(e) => { void handleSubmit(e); }}
+      onSubmit={(e) => {
+        void handleSubmit(e);
+      }}
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
