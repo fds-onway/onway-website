@@ -4,7 +4,6 @@ import { createRoute } from '../../services/routeService';
 import type { CreateRouteDTO } from '../../types/route';
 
 export default function CreateRoute() {
-
   async function handleSubmit(data: CreateRouteDTO) {
     await createRoute(data);
   }

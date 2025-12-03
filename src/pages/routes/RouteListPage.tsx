@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RouteList } from '../../components/RouteList';
-import type { CreateRouteDTO } from '../../types/route';
 import { api } from '../../services/api';
 import { toast } from 'react-toastify';
+import type { RouteListItem } from '@/types/route';
 
 export default function RouteListPage() {
-  const [routes, setRoutes] = useState<CreateRouteDTO[]>([]);
+  const [routes, setRoutes] = useState<RouteListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -24,15 +24,16 @@ export default function RouteListPage() {
     fetchRoutes();
   }, []);
 
-  function handleEdit(route: CreateRouteDTO) {
+  function handleEdit(route: RouteListItem) {
     // Navegar para página de edição ou abrir modal (implementar conforme necessidade)
-    toast.info(`Editar rota: ${route.name}`);
+    toast.info(`Editar rota: ${String(route.name)}`);
   }
 
-  async function handleDelete(route: CreateRouteDTO & { id?: string }) {
+  async function handleDelete(route: RouteListItem) {
     try {
-      if (!route.id) throw new Error('ID da rota não encontrado');
-      await api.delete(`/route/${route.id}`);
+      if (route.id === undefined || route.id === null)
+        throw new Error('ID da rota não encontrado');
+      await api.delete(`/route/${String(route.id)}`);
       setRoutes((prev) => prev.filter((r) => r.id !== route.id));
       toast.success('Rota excluída com sucesso!');
     } catch (err: any) {
@@ -46,7 +47,9 @@ export default function RouteListPage() {
         <h1 className="text-2xl font-bold">Rotas cadastradas</h1>
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-          onClick={() => navigate('/routes/create')}
+          onClick={() => {
+            navigate('/routes/create');
+          }}
         >
           + Adicionar rota
         </button>
@@ -54,7 +57,13 @@ export default function RouteListPage() {
       {loading ? (
         <div className="text-blue-600">Carregando...</div>
       ) : (
-        <RouteList routes={routes} onEdit={handleEdit} onDelete={handleDelete} />
+        <RouteList
+          routes={routes}
+          onEdit={handleEdit}
+          onDelete={(route) => {
+            void handleDelete(route);
+          }}
+        />
       )}
     </div>
   );

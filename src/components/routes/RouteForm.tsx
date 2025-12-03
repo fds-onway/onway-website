@@ -3,11 +3,7 @@ import { PointsList } from './PointsList';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import type {
-  CreateRouteDTO,
-  ImageDTO,
-  PointDTO,
-} from '../../types/route';
+import type { CreateRouteDTO, ImageDTO, PointDTO } from '../../types/route';
 import { TagsSelect } from './TagsSelect';
 import { ImageDropzone } from './ImageDropzone';
 import { RouteMap } from './RouteMap';
@@ -100,7 +96,7 @@ export function RouteForm({
       ],
     });
   }
-  
+
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -118,7 +114,7 @@ export function RouteForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={void handleSubmit}>
       <div className="grid grid-cols-12">
         {/* Box principal da rota */}
         <Card className="col-span-12 shadow-sm border rounded-lg bg-white p-6">

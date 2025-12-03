@@ -19,30 +19,42 @@ interface TableListDefaultProps<T> {
   data: T[];
   actions?: TableAction<T>[];
 }
-  interface TableListDefaultProps<T extends object> {
-    columns: TableColumn<T>[];
-    data: T[];
-    actions?: TableAction<T>[];
+interface TableListDefaultProps<T extends object> {
+  columns: TableColumn<T>[];
+  data: T[];
+  actions?: TableAction<T>[];
 }
 
-export function TableListDefault<T extends object>({ columns, data, actions }: TableListDefaultProps<T>) {
+export function TableListDefault<T extends object>({
+  columns,
+  data,
+  actions,
+}: TableListDefaultProps<T>) {
   return (
     <div className="overflow-x-auto w-full">
       <table className="min-w-full bg-white border rounded shadow">
         <thead>
           <tr>
             {columns.map((col) => (
-              <th key={String(col.key)} className="px-4 py-2 text-left border-b font-semibold text-gray-700">
+              <th
+                key={String(col.key)}
+                className="px-4 py-2 text-left border-b font-semibold text-gray-700"
+              >
                 {col.label}
               </th>
             ))}
-            {actions && actions.length > 0 && <th className="px-4 py-2 border-b">Ações</th>}
+            {actions && actions.length > 0 && (
+              <th className="px-4 py-2 border-b">Ações</th>
+            )}
           </tr>
         </thead>
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length + (actions ? 1 : 0)} className="px-4 py-6 text-center text-gray-400">
+              <td
+                colSpan={columns.length + (actions ? 1 : 0)}
+                className="px-4 py-6 text-center text-gray-400"
+              >
                 Nenhum registro encontrado
               </td>
             </tr>
@@ -50,7 +62,10 @@ export function TableListDefault<T extends object>({ columns, data, actions }: T
             data.map((row, idx) => (
               <tr key={idx} className="hover:bg-gray-50">
                 {columns.map((col) => (
-                    <td key={String(col.key)} className="px-4 py-2 border-b min-h-[64px] align-middle">
+                  <td
+                    key={String(col.key)}
+                    className="px-4 py-2 border-b min-h-[64px] align-middle"
+                  >
                     {col.render
                       ? col.render(row[col.key], row)
                       : (row[col.key] as ReactNode)}

@@ -35,7 +35,7 @@ export function ImageDropzone({ images, onChange }: ImageDropzoneProps) {
         type="file"
         accept="image/*"
         multiple
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => void handleFiles(e.target.files)}
         className="hidden"
       />
       <div className="flex gap-2 mt-2 flex-wrap">

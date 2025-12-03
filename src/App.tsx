@@ -33,12 +33,21 @@ function AppRoutes() {
 
 function App() {
   return (
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-          <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
-        </BrowserRouter>
-      </AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
