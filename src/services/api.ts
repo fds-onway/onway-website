@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://api.crassus.app.br';
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Instância do axios com configurações padrão
 export const api = axios.create({

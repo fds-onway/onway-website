@@ -36,7 +36,17 @@ export function RouteList({ routes, onEdit, onDelete }: RouteListProps) {
       },
     },
     { key: 'name', label: 'Nome' },
-    { key: 'description', label: 'Descrição' },
+    {
+      key: 'description',
+      label: 'Descrição',
+      render: (description) => {
+        return (
+          <div className="flex gap-1 text-wrap">
+            {description.toString().substring(0, 40)}
+          </div>
+        );
+      },
+    },
     {
       key: 'tags',
       label: 'Tags',

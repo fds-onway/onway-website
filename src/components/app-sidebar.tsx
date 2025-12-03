@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Bird, LayoutDashboard, MapIcon } from 'lucide-react';
+import { Bird, LayoutDashboard, MapIcon, Settings, User } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +14,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { NavProjects } from './nav-projects';
 
 // This is sample data.
 const data = {
@@ -27,6 +28,18 @@ const data = {
       name: 'OnWay',
       logo: Bird,
       plan: 'Enterprise',
+    },
+  ],
+  projects: [
+    {
+      name: 'Usuários',
+      url: 'users',
+      icon: User,
+    },
+    {
+      name: 'Configurações',
+      url: 'settings',
+      icon: Settings,
     },
   ],
   navMain: [
@@ -98,7 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
+        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
       <SidebarRail />

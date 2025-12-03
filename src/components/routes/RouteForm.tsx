@@ -114,7 +114,7 @@ export function RouteForm({
   }
 
   return (
-    <form onSubmit={void handleSubmit}>
+    <>
       <div className="grid grid-cols-12">
         {/* Box principal da rota */}
         <Card className="col-span-12 shadow-sm border rounded-lg bg-white p-6">
@@ -207,11 +207,12 @@ export function RouteForm({
       </Dialog>
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded mt-6"
+        onClick={(e) => void handleSubmit(e)}
+        className="cursor-point bg-blue-600 text-white px-4 py-2 rounded mt-6"
         disabled={submitting}
       >
         {submitting ? 'Salvando...' : 'Salvar rota'}
       </button>
-    </form>
+    </>
   );
 }

@@ -24,7 +24,7 @@ export function LoginForm({
 
   // Redireciona o usuário para o login social Google
   const handleGoogleLogin = () => {
-    window.open('https://api.crassus.app.br/auth/google', '_self');
+    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
   };
 
   // Autentica usuário convencional
