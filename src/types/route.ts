@@ -1,4 +1,14 @@
-export interface ImageRouteDTO {
+export interface RouteListItem {
+  id: number;
+  name: string;
+  description: string;
+  tags: string[];
+  rating: number;
+  ratingCount: number;
+  image: string;
+}
+
+export interface ImageDTO {
   fileName: string;
   imageUrl: string;
 }
@@ -16,18 +26,14 @@ export interface PointDTO {
   description: string;
   latitude: string;
   longitude: string;
-  images: ImagePointDTO[];
-}
-
-export interface ImagePointDTO {
-  fileName: string;
-  imageUrl: string;
+  images: ImageDTO[];
 }
 
 export interface CreateRouteDTO {
+  id?: string;
   name: string;
   description: string;
   tags: string[];
-  images: ImageRouteDTO[];
+  images: ImageDTO[];
   points: PointDTO[];
 }

@@ -1,11 +1,12 @@
 import { PointForm } from './PointForm';
 import { PointsList } from './PointsList';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type {
   CreateRouteDTO,
+  ImageDTO,
   PointDTO,
-  ImageRouteDTO,
 } from '../../types/route';
 import { TagsSelect } from './TagsSelect';
 import { ImageDropzone } from './ImageDropzone';
@@ -19,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 
 // TODO: importar componentes de tags, dropzone, mapa, lista de pontos
 
@@ -33,7 +35,7 @@ const initialRoute: CreateRouteDTO = {
 export function RouteForm({
   onSubmit,
 }: {
-  onSubmit: (data: CreateRouteDTO) => void;
+  onSubmit: (data: CreateRouteDTO) => Promise<void> | void;
 }) {
   const [editingPointIdx, setEditingPointIdx] = useState<number | null>(null);
 
@@ -66,6 +68,7 @@ export function RouteForm({
     setRoute({ ...route, points: updated });
   }
   const [route, setRoute] = useState<CreateRouteDTO>(initialRoute);
+  const [submitting, setSubmitting] = useState(false);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -77,7 +80,7 @@ export function RouteForm({
     setRoute({ ...route, tags });
   }
 
-  function handleImagesChange(images: ImageRouteDTO[]) {
+  function handleImagesChange(images: ImageDTO[]) {
     setRoute({ ...route, images });
   }
 
@@ -97,10 +100,21 @@ export function RouteForm({
       ],
     });
   }
+  
+  const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSubmit(route);
+    setSubmitting(true);
+    try {
+      await onSubmit(route);
+      toast.success('Rota cadastrada com sucesso!');
+      navigate('/routes');
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro ao cadastrar rota');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -198,8 +212,9 @@ export function RouteForm({
       <button
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded mt-6"
+        disabled={submitting}
       >
-        Salvar rota
+        {submitting ? 'Salvando...' : 'Salvar rota'}
       </button>
     </form>
   );
