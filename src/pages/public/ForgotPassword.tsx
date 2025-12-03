@@ -36,10 +36,10 @@ export default function ForgotPassword() {
     try {
       await api.post('/auth/forgot-password', { email });
       setSuccess(
-        'Se um usuário com este e-mail estiver cadastrado, um link de redefinição será enviado.'
+        'Se um usuário com este e-mail estiver cadastrado, um link de redefinição será enviado.',
       );
       setEmail('');
-    } catch (err: unknown){
+    } catch (err: unknown) {
       if (
         typeof err === 'object' &&
         err !== null &&
@@ -69,7 +69,7 @@ export default function ForgotPassword() {
 
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={void handleSubmit}>
               <FieldGroup>
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h1 className="text-2xl font-bold">Recuperar senha</h1>

@@ -82,7 +82,7 @@ export default function ResetPassword() {
 
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={void handleSubmit}>
               <FieldGroup>
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h1 className="text-2xl font-bold">Redefinir Senha</h1>

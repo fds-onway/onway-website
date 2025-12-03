@@ -23,7 +23,7 @@ export function LoginForm({
 
   // Redireciona o usuário para o login social Google
   const handleGoogleLogin = () => {
-    window.open('https://api.crassus.app.br/auth/google', '_self');
+    window.open('http://localhost:3000/auth/google', '_self');
   };
 
   // Autentica usuário convencional
@@ -32,7 +32,7 @@ export function LoginForm({
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://api.crassus.app.br/auth/user', {
+      const res = await fetch('http://localhost:3000/auth/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

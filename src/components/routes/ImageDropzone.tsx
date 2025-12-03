@@ -1,4 +1,6 @@
 import { useRef } from 'react';
+import { uploadImage } from '@/services/routeService';
+import { toast } from 'react-toastify';
 import { ImagePlus } from 'lucide-react';
 
 interface ImageDropzoneProps {
@@ -9,13 +11,16 @@ interface ImageDropzoneProps {
 export function ImageDropzone({ images, onChange }: ImageDropzoneProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function handleFiles(files: FileList | null) {
+  async function handleFiles(files: FileList | null) {
     if (!files) return;
-    const newImages = Array.from(files).map((file) => ({
-      fileName: file.name,
-      imageUrl: URL.createObjectURL(file), // Apenas para preview local
-    }));
-    onChange([...images, ...newImages]);
+    for (const file of Array.from(files)) {
+      try {
+        const img = await uploadImage(file);
+        onChange([...images, img]);
+      } catch (err: any) {
+        toast.error('Erro ao fazer upload da imagem: ' + (err.message || ''));
+      }
+    }
   }
 
   function handleRemove(index: number) {
@@ -30,7 +35,7 @@ export function ImageDropzone({ images, onChange }: ImageDropzoneProps) {
         type="file"
         accept="image/*"
         multiple
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => void handleFiles(e.target.files)}
         className="hidden"
       />
       <div className="flex gap-2 mt-2 flex-wrap">

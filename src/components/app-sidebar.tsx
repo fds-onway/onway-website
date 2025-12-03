@@ -37,26 +37,8 @@ const data = {
     },
     {
       title: 'Rotas',
-      url: '#',
+      url: '/routes',
       icon: MapIcon,
-      items: [
-        {
-          title: 'Cadastrar rota',
-          url: '/routes/create',
-        },
-        // {
-        //   title: "Categorias",
-        //   url: "categories",
-        // },
-        // {
-        //   title: "Trilhas",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Pontos",
-        //   url: "#",
-        // },
-      ],
     },
     // {
     //   title: "Documentation",
