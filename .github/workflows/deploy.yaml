@@ -15,6 +15,5 @@ jobs:
     name: Deploy
     uses: fds-onway/onway-infra/.github/workflows/bucket_website_deploy.yaml@main
     with:
-      bucket_name: 'www.crassus.app.br'
-      api_url: 'api.crassus.app.br'
+        bucket_name: 'www.crassus.app.br'
     secrets: inherit
