@@ -25,8 +25,11 @@ export default function RouteListPage() {
   }, []);
 
   function handleEdit(route: RouteListItem) {
-    // Navegar para página de edição ou abrir modal (implementar conforme necessidade)
-    toast.info(`Editar rota: ${String(route.name)}`);
+    if (route.id !== undefined && route.id !== null) {
+      navigate(`/routes/edit/${route.id}`);
+    } else {
+      toast.error('ID da rota não encontrado');
+    }
   }
 
   async function handleDelete(route: RouteListItem) {

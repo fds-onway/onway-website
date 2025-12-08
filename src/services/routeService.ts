@@ -41,6 +41,7 @@ export async function uploadImage(file: File): Promise<ImageDTO> {
     throw new Error(err?.message || 'Erro ao fazer upload da imagem');
   }
 }
+
 import type { CreateRouteDTO } from '../types/route';
 
 const API_URL = '/route';
@@ -53,6 +54,29 @@ export async function createRoute<T = unknown>(
     return response.data as T;
   } catch (err: any) {
     throw new Error(err?.message || 'Erro ao criar rota');
+  }
+}
+
+// Editar rota existente
+export async function updateRoute<T = unknown>(
+  id: string | number,
+  data: CreateRouteDTO,
+): Promise<T> {
+  try {
+    const response = await api.patch(`${API_URL}/${id}`, data);
+    return response.data as T;
+  } catch (err: any) {
+    throw new Error(err?.message || 'Erro ao atualizar rota');
+  }
+}
+
+// Buscar rota por ID
+export async function getRouteById(id: string | number): Promise<CreateRouteDTO> {
+  try {
+    const response = await api.get(`${API_URL}/${id}`);
+    return response.data as CreateRouteDTO;
+  } catch (err: any) {
+    throw new Error(err?.message || 'Erro ao buscar rota');
   }
 }
 

@@ -1,11 +1,21 @@
 // import { useState } from 'react';
+import { toast } from 'sonner';
 import { RouteForm } from '../../components/routes/RouteForm';
 import { createRoute } from '../../services/routeService';
 import type { CreateRouteDTO } from '../../types/route';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateRoute() {
+  const navigate = useNavigate();
+
   async function handleSubmit(data: CreateRouteDTO) {
-    await createRoute(data);
+    try {
+      await createRoute(data);
+      toast.success('Rota criada com sucesso!');
+      navigate('/routes');
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro ao criar rota');
+    }
   }
 
   return (

@@ -28,10 +28,13 @@ const initialRoute: CreateRouteDTO = {
   points: [],
 };
 
+
 export function RouteForm({
   onSubmit,
+  initialData,
 }: {
   onSubmit: (data: CreateRouteDTO) => Promise<void> | void;
+  initialData?: CreateRouteDTO;
 }) {
   const [editingPointIdx, setEditingPointIdx] = useState<number | null>(null);
 
@@ -63,7 +66,11 @@ export function RouteForm({
     updated.splice(to, 0, moved);
     setRoute({ ...route, points: updated });
   }
-  const [route, setRoute] = useState<CreateRouteDTO>(initialRoute);
+  const [route, setRoute] = useState<CreateRouteDTO>(initialData || initialRoute);
+  // Atualiza o formulário se initialData mudar (edição)
+  React.useEffect(() => {
+    if (initialData) setRoute(initialData);
+  }, [initialData]);
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(
@@ -97,15 +104,11 @@ export function RouteForm({
     });
   }
 
-  const navigate = useNavigate();
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     try {
       await onSubmit(route);
-      toast.success('Rota cadastrada com sucesso!');
-      navigate('/routes');
     } catch (err: any) {
       toast.error(err?.message || 'Erro ao cadastrar rota');
     } finally {
