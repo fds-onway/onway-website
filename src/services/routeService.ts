@@ -71,7 +71,9 @@ export async function updateRoute<T = unknown>(
 }
 
 // Buscar rota por ID
-export async function getRouteById(id: string | number): Promise<CreateRouteDTO> {
+export async function getRouteById(
+  id: string | number,
+): Promise<CreateRouteDTO> {
   try {
     const response = await api.get(`${API_URL}/${id}`);
     return response.data as CreateRouteDTO;

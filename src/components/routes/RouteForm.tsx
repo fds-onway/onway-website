@@ -16,7 +16,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
 
 // TODO: importar componentes de tags, dropzone, mapa, lista de pontos
 
@@ -27,7 +26,6 @@ const initialRoute: CreateRouteDTO = {
   images: [],
   points: [],
 };
-
 
 export function RouteForm({
   onSubmit,
@@ -66,7 +64,9 @@ export function RouteForm({
     updated.splice(to, 0, moved);
     setRoute({ ...route, points: updated });
   }
-  const [route, setRoute] = useState<CreateRouteDTO>(initialData || initialRoute);
+  const [route, setRoute] = useState<CreateRouteDTO>(
+    initialData || initialRoute,
+  );
   // Atualiza o formulário se initialData mudar (edição)
   React.useEffect(() => {
     if (initialData) setRoute(initialData);

@@ -19,7 +19,7 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"> 
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-lg shadow-lg p-6 min-w-[300px]">
         <h2 className="text-lg font-bold mb-2">{title}</h2>
         <p className="mb-6 text-gray-700">{message}</p>
