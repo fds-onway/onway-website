@@ -1,11 +1,5 @@
-import {
-  TileLayer,
-  Marker,
-  Polyline,
-  useMapEvents,
-  Popup,
-  MapContainer,
-} from 'react-leaflet';
+import { TileLayer, Marker, Polyline, useMapEvents, Popup, MapContainer } from 'react-leaflet';
+import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 
@@ -34,6 +28,12 @@ function MapClickHandler({
 }
 
 export function RouteMap({ points, onAddPoint }: RouteMapProps) {
+  const customMarker = L.icon({
+    iconUrl: '/marker.svg',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
   const [routePositions, setRoutePositions] = useState<Array<[number, number]>>(
     [],
   );
@@ -86,7 +86,6 @@ export function RouteMap({ points, onAddPoint }: RouteMapProps) {
       <MapContainer
         style={{ height: '100%', width: '100%', zIndex: 10 }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         center={[-25.7346, -53.0585]}
         zoom={13}
       >
@@ -96,6 +95,7 @@ export function RouteMap({ points, onAddPoint }: RouteMapProps) {
           <Marker
             key={idx}
             position={[parseFloat(p.latitude), parseFloat(p.longitude)]}
+            {...(customMarker ? { icon: customMarker } : {})}
           >
             <Popup>
               <span className="font-bold text-lg">{idx + 1}</span>

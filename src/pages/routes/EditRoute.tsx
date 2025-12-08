@@ -16,7 +16,28 @@ export default function EditRoute() {
       try {
         if (!id) throw new Error('ID da rota não informado');
         const data = await getRouteById(id);
-        setInitialData(data);
+        // Transforma imagens da rota para o formato esperado
+        const formattedData = {
+          ...data,
+          images: Array.isArray(data.images)
+            ? (data.images as unknown as string[]).map((url: string) => ({
+                fileName: url.split('/').pop() || 'imagem',
+                imageUrl: url,
+              }))
+            : [],
+          points: Array.isArray(data.points)
+            ? data.points.map((point) => ({
+                ...point,
+                images: Array.isArray(point.images)
+                ? (point.images as unknown as string[]).map((url: string) => ({
+                      fileName: url.split('/').pop() || 'imagem',
+                      imageUrl: url,
+                    }))
+                  : [],
+            }))
+            : [],
+        };
+        setInitialData(formattedData);
       } catch (err: any) {
         toast.error(err?.message || 'Erro ao carregar rota');
         navigate('/routes');
